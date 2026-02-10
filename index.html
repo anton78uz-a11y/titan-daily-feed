@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Titan Invest: Daily Feed — Исследование для Альфа-Капитал</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Sans+3:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--dark:#0c1220;--dark2:#111827;--navy:#1a2332;
+--gold:#c9a84c;--gold-light:#e8d48b;--gold-dim:rgba(201,168,76,.15);
+--blue:#4f7df5;--blue-dim:rgba(79,125,245,.12);
+--red:#d4453a;--red-dim:rgba(212,69,58,.1);
+--green:#34a853;
+--cream:#f5f3ee;--white:#ffffff;--gray50:#f9fafb;
+--text:#1a1a2e;--text2:#4b5563;--text3:#9ca3af;
+--serif:'Playfair Display',Georgia,serif;
+--sans:'Source Sans 3',-apple-system,sans-serif;
+--mono:'DM Mono','Courier New',monospace;
+--max:1140px;--radius:12px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--text);background:var(--cream);line-height:1.7;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--gold);text-decoration:none}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(12,18,32,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.15);transition:transform .3s}
+.nav-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;gap:2rem;padding:.75rem 2rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav-brand{font-family:var(--serif);color:var(--gold);font-size:1rem;font-weight:700;white-space:nowrap;letter-spacing:.02em}
+.nav-links{display:flex;gap:.25rem;margin-left:auto}
+.nav-links a{color:rgba(255,255,255,.55);font-size:.8rem;padding:.4rem .75rem;border-radius:6px;white-space:nowrap;transition:all .2s;font-weight:500}
+.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(201,168,76,.15)}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* HERO */
+.hero{min-height:100vh;background:var(--dark);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:6rem 2rem 4rem}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(79,125,245,.08),transparent),radial-gradient(ellipse 50% 50% at 80% 20%,rgba(201,168,76,.06),transparent)}
+.hero::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M30 0v60M0 30h60' stroke='rgba(255,255,255,0.02)' stroke-width='.5'/%3E%3C/svg%3E")}
+.hero-content{position:relative;z-index:1;max-width:900px;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1.25rem;border:1px solid rgba(201,168,76,.3);border-radius:100px;color:var(--gold);font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2rem;background:rgba(201,168,76,.06)}
+.hero h1{font-family:var(--serif);color:#fff;font-size:clamp(2.5rem,6vw,4.5rem);line-height:1.1;font-weight:900;margin-bottom:1.5rem}
+.hero h1 em{color:var(--gold);font-style:normal}
+.hero-sub{color:rgba(255,255,255,.6);font-size:clamp(1rem,2vw,1.25rem);max-width:680px;margin:0 auto 3rem;line-height:1.6;font-weight:300}
+.hero-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:700px;margin:0 auto}
+.hero-metric{text-align:center;padding:1.5rem 1rem;border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);background:rgba(255,255,255,.03)}
+.hero-metric .num{font-family:var(--mono);color:var(--gold);font-size:clamp(1.5rem,4vw,2.5rem);font-weight:500;display:block}
+.hero-metric .label{color:rgba(255,255,255,.45);font-size:.8rem;margin-top:.25rem;font-weight:500}
+@media(max-width:600px){.hero-metrics{grid-template-columns:1fr;max-width:300px}}
+
+/* SECTIONS */
+section{padding:5rem 2rem}
+.section-dark{background:var(--dark);color:#fff}
+.section-dark h2,.section-dark h3{color:#fff}
+.section-navy{background:var(--navy);color:#fff}
+.section-navy h2,.section-navy h3{color:#fff}
+.container{max-width:var(--max);margin:0 auto}
+.section-label{font-family:var(--mono);font-size:.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:.15em;margin-bottom:.75rem;font-weight:500}
+h2{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.2;margin-bottom:1.5rem;font-weight:700}
+h3{font-family:var(--serif);font-size:clamp(1.2rem,2.5vw,1.6rem);line-height:1.3;margin-bottom:1rem;font-weight:700}
+.lead{font-size:1.15rem;color:var(--text2);line-height:1.7;max-width:720px;margin-bottom:2rem}
+.section-dark .lead{color:rgba(255,255,255,.6)}
+
+/* METRIC GRID */
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:2rem 0}
+.metric-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:1.5rem;text-align:center;transition:transform .2s,border-color .2s}
+.metric-card:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.3)}
+.metric-card .val{font-family:var(--mono);font-size:1.6rem;color:var(--gold);font-weight:500}
+.metric-card .desc{font-size:.85rem;color:rgba(255,255,255,.5);margin-top:.35rem;line-height:1.4}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;margin:2rem 0;border-radius:var(--radius);border:1px solid rgba(0,0,0,.08)}
+.section-dark .table-wrap{border-color:rgba(255,255,255,.1)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{background:var(--dark);color:var(--gold);font-weight:600;text-align:left;padding:.75rem 1rem;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+td{padding:.7rem 1rem;border-bottom:1px solid rgba(0,0,0,.06);vertical-align:top}
+.section-dark td{border-color:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
+.section-dark tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+tr:nth-child(even) td{background:rgba(0,0,0,.02)}
+.tag{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600}
+.tag-red{background:var(--red-dim);color:var(--red)}
+.tag-gold{background:var(--gold-dim);color:var(--gold)}
+.tag-blue{background:var(--blue-dim);color:var(--blue)}
+.tag-green{background:rgba(52,168,83,.12);color:var(--green)}
+
+/* PHONE MOCKUP */
+.phone{background:#000;border-radius:28px;padding:8px;box-shadow:0 25px 80px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.1);max-width:280px;margin:0 auto;position:relative}
+.phone img{border-radius:20px;width:100%;display:block}
+.phone-label{text-align:center;margin-top:1rem;font-size:.8rem;color:var(--text3);font-weight:500}
+.section-dark .phone-label{color:rgba(255,255,255,.4)}
+.phone-row{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin:3rem 0}
+.phone-col{text-align:center}
+
+/* TWO COLUMNS */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;margin:3rem 0}
+@media(max-width:768px){.two-col{grid-template-columns:1fr;gap:2rem}}
+.two-col.reverse .col-text{order:2}
+.two-col.reverse .col-img{order:1}
+@media(max-width:768px){.two-col.reverse .col-text{order:1}.two-col.reverse .col-img{order:2}}
+
+/* QUOTE */
+.quote{position:relative;padding:2rem 0 2rem 2rem;margin:2.5rem 0;border-left:3px solid var(--gold)}
+.quote p{font-family:var(--serif);font-size:clamp(1.1rem,2.5vw,1.4rem);line-height:1.5;font-style:italic;color:var(--text)}
+.section-dark .quote p{color:rgba(255,255,255,.85)}
+.quote cite{display:block;margin-top:.75rem;font-style:normal;font-family:var(--sans);font-size:.85rem;color:var(--text3);font-weight:600}
+.section-dark .quote cite{color:rgba(255,255,255,.4)}
+
+/* CALLOUT */
+.callout{border-radius:var(--radius);padding:2rem;margin:2rem 0}
+.callout-gold{background:var(--gold-dim);border:1px solid rgba(201,168,76,.2)}
+.callout-red{background:var(--red-dim);border:1px solid rgba(212,69,58,.2)}
+.callout-blue{background:var(--blue-dim);border:1px solid rgba(79,125,245,.2)}
+.callout h4{font-family:var(--serif);font-size:1.1rem;margin-bottom:.5rem}
+.callout p{font-size:.95rem;color:var(--text2);line-height:1.6}
+
+/* TIMELINE / ROADMAP */
+.roadmap{display:grid;gap:2rem;margin:2rem 0}
+.phase{background:var(--white);border-radius:var(--radius);padding:2rem;border:1px solid rgba(0,0,0,.08);position:relative;overflow:hidden}
+.phase::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px}
+.phase-1::before{background:var(--blue)}
+.phase-2::before{background:var(--gold)}
+.phase-3::before{background:var(--green)}
+.phase-num{font-family:var(--mono);font-size:.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.phase h3{margin-bottom:.75rem}
+.phase ul{list-style:none;padding:0}
+.phase li{padding:.35rem 0 .35rem 1.5rem;position:relative;font-size:.95rem;color:var(--text2)}
+.phase li::before{content:'';position:absolute;left:0;top:.7rem;width:8px;height:8px;border-radius:50%;border:2px solid var(--gold);background:var(--white)}
+.phase .metric-target{display:inline-block;margin-top:.75rem;padding:.35rem .75rem;background:var(--gold-dim);border-radius:6px;font-family:var(--mono);font-size:.8rem;color:var(--gold);font-weight:500}
+
+/* COMPARISON */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:2rem 0;border-radius:var(--radius);overflow:hidden;border:1px solid rgba(0,0,0,.08)}
+.compare-side{padding:2rem}
+.compare-side h4{font-family:var(--serif);font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.compare-titan{background:var(--dark);color:#fff}
+.compare-titan h4{color:var(--gold)}
+.compare-ak{background:var(--white)}
+.compare-list{list-style:none;padding:0;font-size:.9rem}
+.compare-list li{padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.compare-ak .compare-list li{border-color:rgba(0,0,0,.06);color:var(--text2)}
+@media(max-width:768px){.compare-grid{grid-template-columns:1fr}}
+
+/* BIG NUMBERS (light sections) */
+.big-nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin:2rem 0}
+.big-num{text-align:center;padding:2rem 1.5rem;background:var(--white);border-radius:var(--radius);border:1px solid rgba(0,0,0,.06);box-shadow:0 4px 20px rgba(0,0,0,.04)}
+.big-num .n{font-family:var(--mono);font-size:clamp(2rem,5vw,3rem);color:var(--gold);font-weight:500;line-height:1}
+.big-num .d{font-size:.9rem;color:var(--text2);margin-top:.5rem;line-height:1.4}
+
+/* GAP BADGES */
+.gap-critical{background:#fee2e2;color:#b91c1c;padding:.2rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600}
+.gap-high{background:#fef3c7;color:#92400e;padding:.2rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600}
+.gap-medium{background:#e0e7ff;color:#3730a3;padding:.2rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600}
+
+/* FOOTER */
+footer{background:var(--dark);color:rgba(255,255,255,.3);text-align:center;padding:3rem 2rem;font-size:.8rem}
+footer a{color:var(--gold)}
+
+/* SCROLL ANIMATIONS */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+
+/* DIVIDER */
+.divider{width:60px;height:3px;background:var(--gold);margin:0 0 2rem;border-radius:2px}
+.section-dark .divider{opacity:.6}
+.divider-center{margin-left:auto;margin-right:auto}
+
+/* INLINE HIGHLIGHT */
+mark{background:var(--gold-dim);color:var(--text);padding:.1em .3em;border-radius:3px}
+.section-dark mark{color:#fff}
+
+/* DETAILS LIST */
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin:2rem 0}
+.detail-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:1.5rem}
+.detail-card h4{font-family:var(--serif);font-size:1.05rem;color:var(--gold);margin-bottom:.5rem}
+.detail-card p{font-size:.9rem;color:rgba(255,255,255,.6);line-height:1.6}
+
+/* UTP CARDS */
+.utp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin:2rem 0}
+.utp{background:var(--white);border-radius:var(--radius);padding:2rem;border:1px solid rgba(0,0,0,.06);box-shadow:0 4px 24px rgba(0,0,0,.04);position:relative;overflow:hidden}
+.utp::before{content:attr(data-num);position:absolute;top:-10px;right:10px;font-family:var(--serif);font-size:5rem;font-weight:900;color:rgba(201,168,76,.08);line-height:1}
+.utp h4{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin-bottom:.5rem}
+.utp p{font-size:.9rem;color:var(--text2);line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+<div class="nav-inner">
+<div class="nav-brand">Titan / Deep Research</div>
+<div class="nav-links">
+<a href="#about">О Titan</a>
+<a href="#feed">Daily Feed</a>
+<a href="#pm">PM как медиа</a>
+<a href="#portfolio">Контент и портфель</a>
+<a href="#formats">Форматы</a>
+<a href="#metrics">Бизнес-метрики</a>
+<a href="#compliance">Compliance</a>
+<a href="#gap">Gap-анализ</a>
+</div>
+</div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+<div class="hero-content">
+<div class="hero-badge">Deep Research &middot; Февраль 2026</div>
+<h1>Titan Invest:<br><em>Daily Feed</em></h1>
+<p class="hero-sub">Как управляющая компания из Нью-Йорка превратила инвестиционное приложение в ежедневное медиа&nbsp;&mdash; и&nbsp;что это значит для&nbsp;Альфа-Капитал</p>
+<div class="hero-metrics">
+<div class="hero-metric reveal">
+<span class="num">$1.1B</span>
+<span class="label">AUM под управлением</span>
+</div>
+<div class="hero-metric reveal reveal-delay-1">
+<span class="num">~99%</span>
+<span class="label">Retention клиентов</span>
+</div>
+<div class="hero-metric reveal reveal-delay-2">
+<span class="num">600%</span>
+<span class="label">Рост за 2020 год</span>
+</div>
+</div>
+</div>
+</header>
+
+<!-- ABOUT TITAN -->
+<section class="section-dark" id="about">
+<div class="container">
+<div class="reveal">
+<p class="section-label">01 / Компания</p>
+<h2>Titan в цифрах</h2>
+<div class="divider"></div>
+<p class="lead">Titan&nbsp;&mdash; это &laquo;хедж-фонд для всех&raquo;: активное управление с институциональными стратегиями при&nbsp;пороге входа от&nbsp;$100. Нишу между робо-эдвайзерами и&nbsp;дорогими private-банкирами Titan занял, сделав контент ядром продукта.</p>
+</div>
+
+<div class="metrics-grid reveal">
+<div class="metric-card">
+<div class="val">$1.1&ndash;1.5B</div>
+<div class="desc">AUM (Form ADV, 2025-26)</div>
+</div>
+<div class="metric-card">
+<div class="val">61 435</div>
+<div class="desc">Клиентов (ADV) / ~70-80K к 2026</div>
+</div>
+<div class="metric-card">
+<div class="val">~$18 200</div>
+<div class="desc">Средний размер счёта</div>
+</div>
+<div class="metric-card">
+<div class="val">0.40%</div>
+<div class="desc">Комиссия годовых (flat)</div>
+</div>
+<div class="metric-card">
+<div class="val">$100</div>
+<div class="desc">Минимальный порог входа</div>
+</div>
+<div class="metric-card">
+<div class="val">~$100M</div>
+<div class="desc">Привлечено инвестиций (a16z, YC)</div>
+</div>
+<div class="metric-card">
+<div class="val">80%</div>
+<div class="desc">Клиентов заходят еженедельно</div>
+</div>
+<div class="metric-card">
+<div class="val">9</div>
+<div class="desc">Инвест-стратегий (от акций до крипто)</div>
+</div>
+</div>
+
+<div class="callout callout-gold reveal" style="margin-top:2rem">
+<h4>Эволюция комиссий</h4>
+<p>1% от AUM (2018) &rarr; 0.70-0.90% по тирам &rarr; $25/мес + 0.20% &laquo;модель Costco&raquo; (2024) &rarr; <strong>0.40% flat</strong> без подписки (октябрь 2025). Для сравнения: традиционные советники берут 1%+, робо-эдвайзеры 0.25%. Titan &mdash; посередине, но с активным управлением.</p>
+</div>
+</div>
+</section>
+
+<!-- DAILY FEED -->
+<section id="feed">
+<div class="container">
+<div class="reveal">
+<p class="section-label">02 / Продукт</p>
+<h2>Daily Feed &mdash; ядро продукта</h2>
+<div class="divider"></div>
+<p class="lead">Instagram-подобная лента от инвестиционной команды, встроенная прямо в главный экран приложения. Не отдельная вкладка &mdash; контент живёт рядом с портфелем.</p>
+</div>
+
+<div class="two-col reveal">
+<div class="col-text">
+<h3>&laquo;Места у площадки&raquo;</h3>
+<p style="color:var(--text2);margin-bottom:1.5rem">Titan описывает свою ленту метафорой <strong>&laquo;courtside seats&raquo;</strong> &mdash; места в первом ряду на баскетбольном матче. Клиент наблюдает за инвестиционным процессом в реальном времени, а не получает сухой квартальный отчёт задним числом.</p>
+<p style="color:var(--text2);margin-bottom:1.5rem"><strong>Ключевое решение:</strong> контент расположен на главном экране, прямо под обзором портфеля. Пользователь скроллит ниже баланса и видит &laquo;Latest Research&raquo;. Не нужно искать, не нужно переключать вкладки &mdash; контент встречает при каждом визите.</p>
+<p style="color:var(--text2)"><strong>Push-уведомления</strong> &mdash; главный триггер: &laquo;daily lock screen notifications with short videos&raquo;. Тап по уведомлению &rarr; мгновенный просмотр 2-минутного видео. Медиана: пользователь заходит <mark>1 раз в день</mark> &mdash; экстраординарно для wealth management.</p>
+</div>
+<div class="col-img">
+<div class="phone" style="max-width:300px">
+<img src="img/titan-hero.jpg" alt="Titan Daily Feed — главный экран приложения с портфелем и видео">
+</div>
+<p class="phone-label">Главный экран Titan: портфель + видео PM + Your Inbox</p>
+</div>
+</div>
+
+<div class="quote reveal">
+<p>&laquo;Вы получите видео в приложении от меня и моих коллег как минимум раз в пару недель, объясняющие, что происходит с вашими деньгами и почему&raquo;</p>
+<cite>Clayton Gardner, Co-CEO &amp; CIO, Titan</cite>
+</div>
+
+<h3 class="reveal" style="margin-top:3rem">Форматы контента в ленте</h3>
+<div class="table-wrap reveal">
+<table>
+<thead>
+<tr><th>Формат</th><th>Описание</th><th>Частота</th><th>Потребление</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Three Things</strong></td><td>Ежедневный дайджест: 3 истории + &laquo;Titan&rsquo;s Takeaway&raquo;</td><td>Ежедневно</td><td>3-5 мин</td></tr>
+<tr><td><strong>Trade Commentary</strong></td><td>&laquo;Мы купили IQV, продали RDFN&raquo; &mdash; обоснование сделок</td><td>При сделке</td><td>2-3 мин</td></tr>
+<tr><td><strong>Titan Bell</strong></td><td>Дневной рекап: события, затронувшие позиции</td><td>Ежедневно</td><td>30-45 сек</td></tr>
+<tr><td><strong>Видео</strong></td><td>~2 мин, &laquo;говорящая голова&raquo;, вертикальный формат</td><td>2-4 / мес</td><td>1-2 мин</td></tr>
+<tr><td><strong>Аудио-заметки</strong></td><td>Подкаст-формат для потребления &laquo;на ходу&raquo;</td><td>По событиям</td><td>1-3 мин</td></tr>
+<tr><td><strong>Deep Dive</strong></td><td>Развернутый инвестиционный тезис по позиции</td><td>1-2 / мес</td><td>5-10 мин</td></tr>
+<tr><td><strong>Quarterly Letter</strong></td><td>Стратегическое письмо от CIO клиентам</td><td>1 / квартал</td><td>10-15 мин</td></tr>
+<tr><td><strong>Titan Talks</strong></td><td>Внешние эксперты (бывшие главы ФРС, фаундеры)</td><td>По событиям</td><td>15-30 мин</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout callout-blue reveal">
+<h4>Важный нюанс: не Stories</h4>
+<p>Titan осознанно <strong>не использует</strong> исчезающий контент (Stories формат). Все материалы сохраняются и доступны для перечитывания &mdash; это критично для compliance-архивирования и для новых клиентов, которые могут изучить историю комментариев команды.</p>
+</div>
+</div>
+</section>
+
+<!-- PM AS MEDIA -->
+<section class="section-dark" id="pm">
+<div class="container">
+<div class="reveal">
+<p class="section-label">03 / Люди</p>
+<h2>Портфельные менеджеры<br>как медиа-персоны</h2>
+<div class="divider"></div>
+<p class="lead">В модели Titan портфельный управляющий &mdash; это не просто аналитик, принимающий решения, а <em>публичная личность</em> (Creator). Люди доверяют людям, а не логотипам.</p>
+</div>
+
+<div class="detail-grid reveal">
+<div class="detail-card">
+<h4>Clayton Gardner</h4>
+<p>Co-CEO &amp; CIO. Wharton, Goldman Sachs, Farallon Capital. Главный on-camera голос. Начал инвестировать в 12 лет. Разговорный, доступный стиль. Ведёт квартальные письма инвесторам и ежемесячные видеообращения.</p>
+</div>
+<div class="detail-card">
+<h4>Joe Percoco</h4>
+<p>Co-CEO. UPenn, McKinsey. Отвечает за продуктовый голос компании. Появляется в видео-объяснениях новых фич и бизнес-решений. Проводит AMA-сессии на Reddit.</p>
+</div>
+<div class="detail-card">
+<h4>Justin Yoo &amp; аналитики</h4>
+<p>Investment Analyst. Отвечает на вопросы клиентов в рубрике &laquo;Ask Titan Anything&raquo;. Также Julia Carreon и другие &mdash; каждый аналитик может стать автором контента по своей экспертизе.</p>
+</div>
+<div class="detail-card">
+<h4>Wealth Advisory Team</h4>
+<p>Jack Sullivan, Sofia Silveira, Christina Sanchez (из J.P. Morgan, Goldman Sachs). Пишут контент по финансовому планированию: налоги, RSU, ликвидность. Доступны для звонков 1-на-1.</p>
+</div>
+</div>
+
+<div class="two-col reverse reveal" style="margin-top:3rem">
+<div class="col-text">
+<h3>&laquo;Ask Titan Anything&raquo;</h3>
+<p style="color:rgba(255,255,255,.65);margin-bottom:1rem">Фича, родившаяся на хакатоне: клиент задаёт любой вопрос через форму в приложении &mdash; от мнения о конкретной акции до макропрогноза. Лучшие вопросы получают <strong>публичный ответ</strong> от аналитика с именем и фото.</p>
+<p style="color:rgba(255,255,255,.65);margin-bottom:1rem">Ответ за ~13 часов. Формат: краткий вводный абзац + буллеты с ключевыми тезисами. Тон &mdash; полудискуссионный, информативный, без формальности.</p>
+<p style="color:rgba(255,255,255,.65)"><strong>Командный подход:</strong> в контенте используется &laquo;мы&raquo; (&laquo;we decided to buy Nvidia... we believe&raquo;), решения описываются как коллективные. Это снижает Key Man Risk и позволяет чередовать спикеров.</p>
+</div>
+<div class="col-img">
+<div class="phone" style="max-width:280px">
+<img src="img/titan-qa.jpg" alt="Ask Titan Anything — Q&A с аналитиком Justin Yoo">
+</div>
+<p class="phone-label">&laquo;Ask Titan Anything&raquo; &mdash; Q&amp;A с Justin Yoo</p>
+</div>
+</div>
+
+<div class="quote reveal" style="margin-top:2rem">
+<p>&laquo;Дружелюбно, но профессионально&raquo; &mdash; полуформальный тон, &laquo;как с умным знакомым&raquo;. Не &laquo;Уважаемые инвесторы, предлагаем ознакомиться...&raquo;, а &laquo;Dear Titan Client&hellip;&raquo;</p>
+<cite>Стилистический принцип всего контента Titan</cite>
+</div>
+</div>
+</section>
+
+<!-- CONTENT + PORTFOLIO -->
+<section id="portfolio">
+<div class="container">
+<div class="reveal">
+<p class="section-label">04 / Связь</p>
+<h2>Контент привязан к портфелю</h2>
+<div class="divider"></div>
+<p class="lead">Самое отличительное свойство Titan: каждый кусок контента связан с тем, что происходит с деньгами клиента. Это не медиа ради медиа &mdash; это объяснение инвестиционных решений в реальном времени.</p>
+</div>
+
+<div class="two-col reveal">
+<div class="col-text">
+<h3>Radical Transparency</h3>
+<p style="color:var(--text2);margin-bottom:1rem">Titan использует <strong>SMA-структуру</strong> (Separately Managed Accounts): клиент владеет отдельными акциями напрямую, а не долями в пуле. Каждая из 15-25 позиций видна в портфеле в реальном времени.</p>
+<p style="color:var(--text2);margin-bottom:1rem"><strong>Trade Commentary</strong> называет конкретные бумаги: &laquo;We&rsquo;ve Bought IQV, Sold RDFN and FTDR&raquo; &mdash; с развёрнутым обоснованием каждого решения.</p>
+<p style="color:var(--text2);margin-bottom:1rem"><strong>Персонализация в формулировках:</strong> &laquo;Last month, your investments saw a 5% gain, beating the S&amp;P&raquo;. Обращается к &laquo;вашим инвестициям&raquo;, хотя результат одинаковый для всех клиентов стратегии.</p>
+<p style="color:var(--text2)"><strong>При просадках:</strong> &laquo;Our portfolios are designed to help clients stay invested with confidence &mdash; resisting impulse to sell during downturns.&raquo; Контент заранее психологически готовит к волатильности.</p>
+</div>
+<div class="col-img">
+<div style="background:var(--dark);border-radius:var(--radius);padding:2rem;color:#fff">
+<p style="font-family:var(--mono);font-size:.7rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.1em">Trade Update &middot; Titan Flagship</p>
+<h4 style="font-family:var(--serif);font-size:1.2rem;margin-bottom:1rem;color:#fff">&laquo;We&rsquo;ve Added Nvidia to Flagship &mdash; Here&rsquo;s Why&raquo;</h4>
+<p style="font-size:.9rem;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:1rem">&laquo;Скептики говорят, что мы опоздали с покупкой Nvidia. Мы так не думаем. Исходя из наших прогнозов прибыли, текущая оценка находится на нижней границе исторического диапазона...&raquo;</p>
+<p style="font-size:.75rem;color:rgba(255,255,255,.3);font-style:italic">As of publishing, NVDA is a holding in Titan&rsquo;s Flagship strategy. For illustrative purposes only.</p>
+</div>
+</div>
+</div>
+
+<div class="quote reveal">
+<p>&laquo;Titan даёт клиенту видео-обновления, письменные заметки и рыночные комментарии, объясняя каждый шаг&raquo;</p>
+<cite>NerdWallet, обзор Titan 2025</cite>
+</div>
+</div>
+</section>
+
+<!-- BUSINESS METRICS -->
+<section class="section-navy" id="metrics">
+<div class="container">
+<div class="reveal">
+<p class="section-label">05 / Результаты</p>
+<h2>Влияние на бизнес-метрики</h2>
+<div class="divider"></div>
+<p class="lead">Контент-стратегия Titan &mdash; не PR-активность, а ядро бизнес-модели. Измеримое влияние на retention, рост и engagement.</p>
+</div>
+
+<div class="metrics-grid reveal">
+<div class="metric-card" style="border-color:rgba(201,168,76,.3)">
+<div class="val" style="font-size:2.2rem">~99%</div>
+<div class="desc">Retention rate &mdash; экстраординарный для финтеха. Клиенты &laquo;быстро осознают ценность и наслаждаются опытом&raquo;</div>
+</div>
+<div class="metric-card" style="border-color:rgba(201,168,76,.3)">
+<div class="val" style="font-size:2.2rem">600%</div>
+<div class="desc">Рост выручки, клиентов и AUM в 2020 &mdash; &laquo;при практически нулевом маркетинг-бюджете&raquo;</div>
+</div>
+<div class="metric-card" style="border-color:rgba(201,168,76,.3)">
+<div class="val" style="font-size:2.2rem">80%</div>
+<div class="desc">Клиентов заходят еженедельно, чтобы &laquo;узнать о рынках и своих инвестициях&raquo;</div>
+</div>
+<div class="metric-card" style="border-color:rgba(201,168,76,.3)">
+<div class="val" style="font-size:2.2rem">1x/день</div>
+<div class="desc">Медианная частота визитов в приложение &mdash; как у социальной сети</div>
+</div>
+</div>
+
+<h3 class="reveal" style="margin-top:3rem;color:#fff">Как контент создаёт бизнес-ценность</h3>
+<div class="detail-grid reveal">
+<div class="detail-card">
+<h4>Retention Loop</h4>
+<p>Контент &rarr; ежедневные визиты &rarr; понимание стратегии &rarr; доверие &rarr; удержание при просадках. Клиент, который понимает &laquo;почему мы держим&raquo;, не продаёт на панике.</p>
+</div>
+<div class="detail-card">
+<h4>Acquisition Loop</h4>
+<p>Three Things &mdash; бесплатная email-рассылка для НЕ-клиентов (top-of-funnel). &laquo;This content was heavily forwarded by users to prospective users&raquo; &mdash; сарафанное радио.</p>
+</div>
+<div class="detail-card">
+<h4>Cross-sell через контент</h4>
+<p>Запуск крипто-стратегии = серия образовательных постов &rarr; конверсия. Запуск ARK Venture Fund = объяснительный контент &rarr; клиенты заходят в новый продукт.</p>
+</div>
+<div class="detail-card">
+<h4>Zero-budget marketing</h4>
+<p>&laquo;Они не тратят деньги на маркетинг для роста; они тратят их на опыт инвестирования клиентов&raquo; &mdash; контент заменяет рекламу.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- COMPLIANCE -->
+<section id="compliance">
+<div class="container">
+<div class="reveal">
+<p class="section-label">06 / Регулятика</p>
+<h2>Compliance: урок штрафа SEC на $1 млн</h2>
+<div class="divider"></div>
+</div>
+
+<div class="callout callout-red reveal">
+<h4 style="color:var(--red)">Август 2023 &mdash; первый штраф по обновлённому Marketing Rule</h4>
+<p>SEC оштрафовала Titan на <strong>$1.04 млн</strong> ($192K disgorgement + $850K penalty). Нарушение: рекламировали <strong>&laquo;2,700% annualized return&raquo;</strong> по крипто-стратегии, экстраполировав результаты <em>3 недель</em> гипотетического портфеля без реальных сделок.</p>
+</div>
+
+<div class="two-col reveal">
+<div class="col-text">
+<h3>Суть нарушений</h3>
+<ul style="list-style:none;padding:0">
+<li style="padding:.5rem 0;color:var(--text2);border-bottom:1px solid rgba(0,0,0,.06)">&bull; Экстраполяция краткосрочных результатов в &laquo;годовую доходность&raquo;</li>
+<li style="padding:.5rem 0;color:var(--text2);border-bottom:1px solid rgba(0,0,0,.06)">&bull; Гипотетический портфель без реальных торгов</li>
+<li style="padding:.5rem 0;color:var(--text2);border-bottom:1px solid rgba(0,0,0,.06)">&bull; &laquo;Hedge clauses&raquo; &mdash; оговорки об отказе от ответственности</li>
+<li style="padding:.5rem 0;color:var(--text2);border-bottom:1px solid rgba(0,0,0,.06)">&bull; Несанкционированное использование подписей клиентов</li>
+<li style="padding:.5rem 0;color:var(--text2)">&bull; Отсутствие политики по личным крипто-сделкам сотрудников</li>
+</ul>
+</div>
+<div class="col-text">
+<h3>Ремедиация Titan</h3>
+<ul style="list-style:none;padding:0">
+<li style="padding:.5rem 0;color:var(--text2);border-bottom:1px solid rgba(0,0,0,.06)">&bull; Новый Chief Compliance Officer</li>
+<li style="padding:.5rem 0;color:var(--text2);border-bottom:1px solid rgba(0,0,0,.06)">&bull; Новый CLO &mdash; Sara Egide (ex-Personal Capital)</li>
+<li style="padding:.5rem 0;color:var(--text2);border-bottom:1px solid rgba(0,0,0,.06)">&bull; Расширение compliance-команды</li>
+<li style="padding:.5rem 0;color:var(--text2);border-bottom:1px solid rgba(0,0,0,.06)">&bull; Внутренний аудит + внешняя аудиторская фирма</li>
+<li style="padding:.5rem 0;color:var(--text2)">&bull; Дисклеймеры на каждый пост: &laquo;for illustrative purposes only&raquo;</li>
+</ul>
+</div>
+</div>
+
+<div class="callout callout-gold reveal" style="margin-top:1.5rem">
+<h4>Урок для Альфа-Капитал</h4>
+<p>На стыке маркетинга и инвестиционного консультирования compliance-риск &mdash; главный вызов. Titan доказал: можно транслировать ценную информацию, формулируя её как <strong>обзор и мнение</strong>, а не рекомендацию. Ключевые принципы: не экстраполировать доходность, дисклеймеры на каждую единицу контента, правило &laquo;тихого периода&raquo; (не комментировать сделки до исполнения).</p>
+</div>
+</div>
+</section>
+
+<!-- GAP ANALYSIS -->
+<section class="section-dark" id="gap">
+<div class="container">
+<div class="reveal">
+<p class="section-label">07 / Сравнение</p>
+<h2>Gap-анализ: Titan vs Альфа-Капитал</h2>
+<div class="divider"></div>
+<p class="lead">У Альфа-Капитал уже есть фундамент &mdash; именные авторы, видео, лайки. Но разрыв в ключевых элементах критичен.</p>
+</div>
+
+<!-- Side-by-side phone screenshots -->
+<div class="phone-row reveal">
+<div class="phone-col">
+<div class="phone" style="max-width:220px">
+<img src="img/titan-hero.jpg" alt="Titan — контент на главном экране">
+</div>
+<p class="phone-label">Titan: контент НА главном экране</p>
+</div>
+<div class="phone-col">
+<div class="phone" style="max-width:220px">
+<img src="img/ak-main.jpg" alt="АК — портфель без контента">
+</div>
+<p class="phone-label">АК: портфель отдельно, контент в &laquo;Интересное&raquo;</p>
+</div>
+</div>
+
+<div class="table-wrap reveal" style="margin-top:2rem">
+<table>
+<thead>
+<tr><th>Функция</th><th>Titan</th><th>Альфа-Капитал (сейчас)</th><th>Разрыв</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Расположение контента</strong></td>
+<td>Главный экран, под портфелем</td>
+<td>Отдельная вкладка &laquo;Интересное&raquo;</td>
+<td><span class="gap-critical">Критический</span></td>
+</tr>
+<tr>
+<td><strong>Авторство</strong></td>
+<td>Всегда именной автор с фото</td>
+<td>Микс: есть именные + безликие &laquo;УК АК&raquo;</td>
+<td><span class="gap-medium">Средний</span></td>
+</tr>
+<tr>
+<td><strong>Видео-спикеры</strong></td>
+<td>Свои PM и CIO</td>
+<td>Преимущественно свои аналитики + внешние</td>
+<td><span class="gap-medium">Средний</span></td>
+</tr>
+<tr>
+<td><strong>Связь с портфелем</strong></td>
+<td>&laquo;Мы купили X, потому что...&raquo;</td>
+<td>Отсутствует</td>
+<td><span class="gap-critical">Критический</span></td>
+</tr>
+<tr>
+<td><strong>Оперативность</strong></td>
+<td>Реакция в часы (Market Wrap)</td>
+<td>Еженедельные обзоры</td>
+<td><span class="gap-high">Высокий</span></td>
+</tr>
+<tr>
+<td><strong>Q&amp;A с управляющим</strong></td>
+<td>&laquo;Ask Titan Anything&raquo; &mdash; прямая линия</td>
+<td>Через КЦ или поддержку</td>
+<td><span class="gap-medium">Средний</span></td>
+</tr>
+<tr>
+<td><strong>Тон</strong></td>
+<td>Разговорный, &laquo;как с умным знакомым&raquo;</td>
+<td>Формальный, институциональный</td>
+<td><span class="gap-medium">Средний</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- AK screenshots -->
+<h3 class="reveal" style="margin-top:3rem;color:#fff">Текущий раздел &laquo;Интересное&raquo; в МП Альфа-Капитал</h3>
+<div class="phone-row reveal">
+<div class="phone-col">
+<div class="phone" style="max-width:200px">
+<img src="img/ak-feed.jpg" alt="АК лента — видео о недвижимости">
+</div>
+<p class="phone-label">Лента: видео + карточки</p>
+</div>
+<div class="phone-col">
+<div class="phone" style="max-width:200px">
+<img src="img/ak-feed2.jpg" alt="АК лента — тема недели и новости">
+</div>
+<p class="phone-label">Видео &laquo;Тема недели&raquo; + новости</p>
+</div>
+<div class="phone-col">
+<div class="phone" style="max-width:200px">
+<img src="img/ak-video.jpg" alt="АК видео-статья с внешним спикером">
+</div>
+<p class="phone-label">Видео: внешний спикер (NF Group)</p>
+</div>
+<div class="phone-col">
+<div class="phone" style="max-width:200px">
+<img src="img/ak-analytics.jpg" alt="АК аналитика — обзоры по БПИФам">
+</div>
+<p class="phone-label">Аналитика: обзоры по БПИФам</p>
+</div>
+</div>
+
+<div class="callout callout-gold reveal" style="margin-top:2rem">
+<h4 style="color:var(--gold)">Что уже есть (хорошая база)</h4>
+<p style="color:rgba(255,255,255,.7)">Именные авторы с фото (Приходько, Попцова, Джиоев) &bull; Видео-формат внедрён &bull; Лайки и просмотры &bull; Stories-карусель на главном экране (технически готова) &bull; Внутренний аналитик Джиоев записывает видео &laquo;Тема недели&raquo;</p>
+</div>
+</div>
+</section>
+
+<!-- CONCLUSION -->
+<section class="section-dark" id="conclusion">
+<div class="container" style="text-align:center;max-width:800px">
+<div class="reveal">
+<p class="section-label" style="text-align:center">08 / Вывод</p>
+<h2 style="text-align:center">Главный вывод</h2>
+<div class="divider divider-center"></div>
+</div>
+
+<div class="quote reveal" style="border-left:none;text-align:center;padding-left:0;max-width:650px;margin:2rem auto">
+<p style="font-size:clamp(1.2rem,3vw,1.6rem)">&laquo;Объяснение <em>&laquo;почему мы теряем деньги сегодня&raquo;</em> удерживает клиента лучше, чем молчание&raquo;</p>
+</div>
+
+<div class="utp-grid reveal" style="text-align:left;margin-top:3rem">
+<div class="utp" data-num="1">
+<h4>&laquo;Вы всегда в курсе&raquo;</h4>
+<p>Решает &laquo;проблему чёрного ящика&raquo; &mdash; главную боль клиентов УК. Ни одна российская УК этого не делает. First mover advantage на рынке РФ.</p>
+</div>
+<div class="utp" data-num="2">
+<h4>&laquo;Живые эксперты&raquo;</h4>
+<p>Именные PM с фото, видео, Q&amp;A &mdash; парасоциальные отношения. Клиент уходит от конкурента, но не от &laquo;своего&raquo; аналитика, которого знает по имени.</p>
+</div>
+<div class="utp" data-num="3">
+<h4>&laquo;Контент + AI&raquo;</h4>
+<p>Экспертная лента + AI-консультант (AlphaChat) + персонализация под портфель = персональное финансовое медиа. Ни у кого нет всех трёх элементов.</p>
+</div>
+</div>
+
+<div class="callout callout-gold reveal" style="text-align:left;margin-top:3rem">
+<h4>Что Titan НЕ делает (возможности для АК)</h4>
+<p><strong>Нет AI-персонализации</strong> &mdash; лента общая для всех клиентов стратегии. АК может сделать по-настоящему персонализированную ленту.<br>
+<strong>Нет интеграции с AI-консультантом</strong> &mdash; контент и advisory разделены. АК может замкнуть цикл: прочитал &rarr; спросил AI &rarr; записался на звонок.<br>
+<strong>Нет Telegram-стратегии</strong> &mdash; Titan работает только через приложение. В России Telegram = главный финансовый канал (74% охват).<br>
+<strong>Масштаб 61K vs 2.2M</strong> &mdash; у АК другой порядок влияния и возможностей для сегментации.</p>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<p>Deep Research: Titan Invest Daily Feed &middot; Подготовлено для продуктовой команды УК &laquo;Альфа-Капитал&raquo; &middot; Февраль 2026</p>
+<p style="margin-top:.5rem">Источники: SEC.gov, Form ADV, Contrary Research, NerdWallet, TechCrunch, titan.com, reddit.com/r/titanvest</p>
+</footer>
+
+<script>
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Active nav link
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  navLinks.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
